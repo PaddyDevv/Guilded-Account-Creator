@@ -32,27 +32,37 @@ def d():
         "password":
         password,
         "fullName":
-        f"{FULLNAME}",
-        "profilePicture":
-        "https://s3-us-west-2.amazonaws.com/www.guilded.gg/UserAvatar/c41f9b4c08f98da63ab2015f29dbca59-Large.webp?w=450&h=450"
+        f"{FULLNAME}"
     }
-
+    
+    #Generating acc
+    
     r = requests.post(url, json=json)
     print(r.text)
+    
+    #Getting UserID
     UserID = r.json()['user']['id']
+    
+    #Getting Acc Cookie
     Hmac = r.cookies["hmac_signed_session"]
     print(f"Got Cookie : {Hmac}")
 
+    
+    # Join Server
     session = requests.Session()
     session.headers = {"cookie": f"hmac_signed_session={Hmac}"}
     resp = session.put(f"https://www.guilded.gg/api/invites/{INVITE}")
 
+    
+    #Set Accounts Bio
+    
     Bio = requests.Session()
     Bio.headers = {"cookie": f"hmac_signed_session={Hmac}"}
     BioJSON = {"userId": UserID, "aboutInfo": {"bio": BioTEXT}}
     resp = session.put(f"https://www.guilded.gg/api/users/{UserID}/profilev2",
                        json=BioJSON)
-
+    
+    #Write Cookie And Sleep To Avoid Ban
     CookiesFile = open('cookies.txt', 'a+')
     CookiesFile.write(f'{Hmac}\n')
     print("[!] Waiting 15 Seconds To Avoid Being Banned By Guilded Anti Bot!")
@@ -64,7 +74,7 @@ def d():
 
 
 
-
+# Intro And Start Gen
 def main():
   print("Welcome To Patricks Guilded Botter!")
   print("-----------------------------------")
@@ -74,7 +84,7 @@ def main():
   print("----------------------------------------------------")
 
   print("Starting Guilded Generator!")
-  time.sleep(7)
+  time.sleep(4)
   d()
 
 main()
